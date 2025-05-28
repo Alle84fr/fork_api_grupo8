@@ -35,19 +35,19 @@ services:
       DB_PASSWORD: 12345
 
    #apagar parte de baixo se der erro: micro serviço web
-  type: web
-  nome: Grupo_8_api
-  runtime: python
-  buildCommand: pip install -r requirements.txt
-  startCommand: gunicorn app:app
-  #startCommand: python3 app.python
-  envVars:
-    - key: PORT 
-      sync : false
-      value: 10000
-    - key: FLASK_APP
-      value: "apps.py"
-  plan: free  
+  # type: web
+  # nome: Grupo_8_api
+  # runtime: python
+  # buildCommand: pip install -r requirements.txt
+  # startCommand: gunicorn app:app
+  # #startCommand: python3 app.python
+  # envVars:
+  #   - key: PORT 
+  #     sync : false
+  #     value: 10000
+  #   - key: FLASK_APP
+  #     value: "apps.py"
+  # plan: free  
 
   
 volumes:
