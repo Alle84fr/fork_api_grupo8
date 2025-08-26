@@ -12,7 +12,7 @@ turma_model = turma_ns.model("Turma", {
 
 turma_output_model = turma_ns.model("TurmaOutput",{
     "id": fields.Integer(description="Id da Turma"),
-    "descriacao": fields.String(description="Descrição da Turma"),
+    "descricao": fields.String(description="Descrição da Turma"),
     "ativa": fields.Boolean(description="Turma está ativa: True ou False"),
     "professor_id": fields.Integer(description= "Id relacionado a Professor")
 })
@@ -42,10 +42,20 @@ class TurmaIdResource(Resource):
     def put(self, id_turma):
         """Atualiza uma turma pelo seu ID"""
         data = turma_ns.payload
-        alterarInformacoes(id_turma, data)
+        alterarInformacoes(
+            id_turma,
+            data.get('descricao'),
+            data.get('ativa'),
+            data.get('professor_id'))
         return data, 200
-    
+
     def delete(self, id_turma):
         """Excluí uma turma pelo seu ID"""
-        deletarTurma(id_turma)
-        return {"message":"Turma deletada com êxito"}, 200
+        return deletarTurmaPorId(id_turma)
+
+
+@turma_ns.route('/resetar')
+class Turmareset(Resource):
+    def delete(self):
+        """Resetar todas as Turma"""
+        return deletarTurma() 

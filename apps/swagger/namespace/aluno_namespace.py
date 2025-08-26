@@ -1,5 +1,5 @@
 from flask_restx import Namespace, Resource, fields
-from alunos.model_aluno import procurar_aluno_por_id, criar_novo_aluno, deletar_aluno_por_id, alterar_informacoes_aluno, listar_alunos
+from alunos.model_aluno import procurar_aluno_por_id, criar_novo_aluno, deletar_aluno_por_id, alterar_informacoes_aluno, listar_alunos, resetarAlunos
 
 alunos_ns = Namespace("alunos", description="Operações realizadas aos alunos")
 
@@ -10,7 +10,7 @@ aluno_model = alunos_ns.model("Aluno", {
     "nota_segundo_semestre": fields.Float(required=True, description="Nota do segundo semestre"),
     "turma_id": fields.Integer(required=True, description="ID da turma associada")
 })
-
+ 
 aluno_output_model = alunos_ns.model("AlunoOutput", {
     "id": fields.Integer(description="ID do aluno"),
     "nome": fields.String(description="Nome do aluno"),
@@ -54,3 +54,9 @@ class AlunoIdResource(Resource):
         """Excluir um aluno pelo seu ID"""
         deletar_aluno_por_id(id_aluno)
         return {"message": "Aluno excluído com êxito"}, 200
+
+@alunos_ns.route('/resetar')
+class AlunoResetar(Resource):
+    def delete(self):
+        """Reseta todas as Turmas"""
+        return resetarAlunos()

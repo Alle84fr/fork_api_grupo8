@@ -69,7 +69,7 @@ def ResetarTodaTurma():
 def ResetarTurmaId(id_turma):
      try:
           modTur.deletarTurmaPorId(id_turma)
-          return jsonify(modTur.dadosTurma["Turma"]), 200
+          return jsonify({"Descrição": "Turma cadastrada com êxito!"}), 200
      except modTur.TurmaNaoIdentificada as trm:
           return jsonify({"Erro:": str(trm)}), 404
 
@@ -85,23 +85,28 @@ def AlterarInfo(id_turma):
             "Descrição": "O corpo da requisição está vazio, preencha todos os campos"
         }), 400
     
-    if "Descrição" not in dados:
+    if "descricao" not in dados:
         return jsonify({
             "Erro": "Não foi possível fazer a requisição",
             "Dscrição": "O campo Descrição da turma é obrigatório ser preenchido"
         }), 400
     
-    if "Ativa" not in dados:
+    if "ativa" not in dados:
         return jsonify({
             "Erro": "Não foi possível fazer a requisição",
             "Descrição": "O campo Ativa é obrigatório ser preenchido "
         }), 400
     
-    if "Professor Id" not in dados:
+    if "professor_id" not in dados:
         return jsonify({
             "Erro": "Não foi possível fazer a requisição",
             "Descrição": "O campo Professor Id é obrigatório se preechido"
         }), 400
     
-    resultado, status_code = modTur.alterarInformacoes(id_turma, dados["Descrição"], dados["Ativa"], dados["Professor Id"])
+    resultado, status_code = modTur.alterarInformacoes(
+        id_turma,
+        dados["descricao"],
+        dados["ativa"],
+        dados["professor_id"]
+              )
     return jsonify(resultado), status_code  

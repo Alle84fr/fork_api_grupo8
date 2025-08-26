@@ -84,15 +84,18 @@ class TurmaJaDeletada(Exception):
 #         raise TurmaNaoIdentificada()
 
 def professorExistente(Id_professor):
+    if Id_professor is None:
+        return False
     return Professor.query.get(Id_professor) is not None
+    
 
 def turmaJaExiste(id_turma):
     turma = Turma.query.get(id_turma)
     return turma is not None
 
     
-def procurarTurmaPorId(id_turma):
-    turma = Turma.query.get(id)
+def procurarTurmaPorId(id_turma): 
+    turma = Turma.query.get(id_turma)
     if not turma:
         raise TurmaNaoIdentificada()
     return turma.to_dict()
@@ -127,9 +130,13 @@ def listarTurma():
 #     dadosTurma["Turma"] = []
 
 def deletarTurma():
-    db_serv.session.delete()
-    db_serv.session.commit()
-
+    try:
+        dict_turmas = Turma.query.delete()
+        db_serv.session.commit()
+        return {"mensagem": f"{dict_turmas} Turmass resetadas"}, 200
+    except Exception as e:
+        db_serv.session.rollback()
+        raise Exception(f"{str(e)}: Erro ao resetar Turmas")
 
 # def deletarTurmaPorId(id_turma):
 #     turmas = dadosTurma["Turma"]
@@ -141,7 +148,10 @@ def deletarTurma():
 #     raise TurmaNaoIdentificada()
 
 def deletarTurmaPorId(id_turma):
-    db_serv.session.delete(id_turma)
+    turma = db_serv.session.query(Turma).get(id_turma)
+    if turma is None:
+        return {"message": f"Turma com ID {id_turma} não encontrada."}, 404
+    db_serv.session.delete(turma)
     db_serv.session.commit()
 
 def valoorBuleano(valorbool):
@@ -197,9 +207,9 @@ def alterarInformacoes(Id_turma, Descricao, Ativa, Id_Pro):
                     }), 409
         
         
-        nv_dados["descricao"] = Descricao
-        nv_dados["professor_id"] = Id_Pro
-        nv_dados["ativa"] = Ativa
+        nv_dados.descricao = Descricao
+        nv_dados.professor_id = Id_Pro
+        nv_dados.ativa = Ativa
         db_serv.session.commit()
         return {"Detalhes":"Turma atualizada com seucesso!"}, 200
     
